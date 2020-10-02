@@ -1,0 +1,2 @@
+Para instalar un paquete para incriptar la url: composer require vinkla/hashids
+luego hacemos "php artisan vendor:publish --provider="Vinkla\Hashids\HashidsServiceProvider"
