@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Cashier\Billable;
 
 /**
  * App\Models\User
@@ -38,7 +40,7 @@ use Illuminate\Notifications\Notifiable;
  */
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, Billable;
 
     const ADMIN = 'ADMIN';
     const TEACHER = 'TEACHER';
@@ -74,5 +76,32 @@ class User extends Authenticatable
     public function isTeacher()
     {
        return $this->role === User::TEACHER; 
+    }
+
+    public function courses_learning()
+    {
+        //los cursos que un estudiante está aprendiendo, ponemos el nombre de la tabla pivot
+        return $this->belongsToMany(Course::class, 'course_student');
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    //añadimos un scope para poder utilizar el método courses_learning
+    public function scopePurchasedCourses()
+    {
+        return $this->courses_learning()->with('categories')->paginate();
+    }
+
+    public function scopeProcessedOrders()
+    {
+        //utilizamos el método orders de arriba, y decimos que queremos todos los pedidos donde el estatus sea Success, con relación order_lines y cupóny un conteo de order_lines, al final lo paginamos
+        return $this->orders()
+            ->where('status', Order::SUCCESS)
+            ->with('orderLines', 'coupon')
+            ->withCount('orderLines')
+            ->paginate();
     }
 }

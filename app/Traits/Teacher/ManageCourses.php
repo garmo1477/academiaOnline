@@ -12,6 +12,7 @@ use DB;
 trait ManageCourses{
     public function courses()
     {
+        //usamos el scopeForTeacher del modelo Course
         $courses = Course::forTeacher();
         return view('teacher.courses.index', compact('courses'));
     }
@@ -33,6 +34,7 @@ trait ManageCourses{
             if ($request->hasfile('picture')) {               
                 $file = Uploader::uploadFile('picture', 'courses');
             }            
+            //datos del curso que se está creando recogidos por el método courseInput de más abajo
             $course = Course::create($this->courseInput($file));     
             $course->categories()->sync(request('categories'));           
                  

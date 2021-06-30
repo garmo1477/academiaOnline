@@ -93,6 +93,9 @@
                 {{ __('Organiza las unidades de tu curso') }}
             </h2>
             <ul class="drag-list">
+                <div class="empty-results">
+                    {!! __("Crea más unidades :link", ["link" => "<a href='".route('teacher.units.create')."'>Añadir</a>"]) !!} 
+                </div>
                 @forelse ($course->units as $unit)
                     {{-- Más abajo usamos el data-id en jquery --}}
                     <li data-id="{{ $unit->id }}">
@@ -119,6 +122,7 @@
                                 @break                                
                             @endswitch
                         </span>
+                       
                     </li>
                 @empty
                     <div class="empty-results">

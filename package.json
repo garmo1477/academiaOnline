@@ -24,6 +24,11 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
-        "jconfirm": "^4.5.3"
+        "jconfirm": "^4.5.3",
+        "vee-validate": "^3.4.5",
+        "vue-full-loading": "^1.2.1",
+        "vue-pagination-2": "^3.0.8",
+        "vue-snotify": "^3.2.1",
+        "vue-wysiwyg": "^1.7.2"
     }
 }

@@ -30,4 +30,14 @@ class CoursePolicy
         return !$isTeacher && !$coursePurchased;
         //si no ha comprado ya ese curso y no es profesor, entonces podrá comprar el curso, eso lo definimos llamando este méotodo en purchase_button.blade
     }
+
+    public function review(User $user, Course $course)
+    {
+        // guardamos todos los cursos que el estudiante ha comprado
+        $coursePurchased = $course->students->contains($user->id);
+        // los cursos que ha valorado el alumno
+        $reviewed = $course->reviews->contains('user_id', $user->id);
+
+        return $coursePurchased && !$reviewed;
+    }
 }

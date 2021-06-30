@@ -7,7 +7,7 @@
     <div class="container">
         <div class="section-title mb-3 mt-0">
             <h2>{{ __('Tus unidades') }}</h2>
-            <a href="{{ route('teacher.units.create') }}" class="site-btn">{{ __('Crear una unidad') }}</a>
+            <a href="{{ route("teacher.units.create") }}" class="site-btn">{{ __('Crear una unidad') }}</a>
         </div>
     </div>
     <div class="container">
@@ -50,8 +50,7 @@
                         <tr class="text-center">
                             <td colspan="7">
                                 <div class="empty-results">
-                                    {!! __('No tienes ninguna unidad todavía: :link', ['link' => "<a href='" . route('
-                                        teacher.units.create') . "'>Crear mi primera unidad</a>" ]) !!} </div>
+                                    {!! __('No tienes ninguna unidad todavía: :link', ['link' => "<a href='" . route('teacher.units.create') . "'>Crear mi primera unidad</a>" ]) !!} </div>
                             </td>
                         </tr>
                     @endforelse

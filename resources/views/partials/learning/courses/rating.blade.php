@@ -3,19 +3,19 @@
 <div>
     <ul class="list-inline">
         <li class="list-inline-item">
-            <i class="fa-2x fa fa-star{{ $rating >= 1 ? ' yelow' : '' }}"></i>
+            <i class="fa-2x fa fa-star{{ $rating >= 1 ? ' yellow' : '' }}"></i>
         </li>
         <li class="list-inline-item">
-            <i class="fa-2x fa fa-star{{ $rating >= 2 ? ' yelow' : '' }}"></i>
+            <i class="fa-2x fa fa-star{{ $rating >= 2 ? ' yellow' : '' }}"></i>
         </li>
         <li class="list-inline-item">
-            <i class="fa-2x fa fa-star{{ $rating >= 3 ? ' yelow' : '' }}"></i>
+            <i class="fa-2x fa fa-star{{ $rating >= 3 ? ' yellow' : '' }}"></i>
         </li>
         <li class="list-inline-item">
-            <i class="fa-2x fa fa-star{{ $rating >= 4 ? ' yelow' : '' }}"></i>
+            <i class="fa-2x fa fa-star{{ $rating >= 4 ? ' yellow' : '' }}"></i>
         </li>
         <li class="list-inline-item">
-            <i class="fa-2x fa fa-star{{ $rating = 5 ? ' yelow' : ''  }}"></i>
+            <i class="fa-2x fa fa-star{{ $rating >= 5 ? ' yellow' : ''  }}"></i>
         </li>
         @if (!isset($hideCounter))
         

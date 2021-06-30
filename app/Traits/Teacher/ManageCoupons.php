@@ -24,13 +24,14 @@ trait ManageCoupons
 
     public function storeCoupon(CouponRequest $request)
     {
+        //para guardar lo que se ha creado se hace un try catch
         try {
             DB::beginTransaction();
-            //recibimos el input
+            //recibimos los valores introducidos en los inputs del form de crear cupón y guardamos en una variable
             $input = $this->couponInput();
-            //creamos el cupón
+            //creamos el cupón con los datos introducidos en el form de crear cupones
             $coupon = Coupon::create($input);
-            //utilizamos el cupçon con el método courses() que es la relación que creamos belongsToMany. usamos false para vincular la información
+            //utilizamos el cupón con el método courses() que es la relación que creamos belongsToMany. usamos false para vincular la información
             $coupon->courses()->sync(request('courses'), false);         
             DB::commit();
 
@@ -63,12 +64,14 @@ trait ManageCoupons
     }
     public function updateCoupon(CouponRequest $request, Coupon $coupon)
     {
+        //para guardar lo que se ha editado se hace un try catch
         try {
             DB::beginTransaction();
             //recibimos el input
             $input = $this->couponInput();
-            //creamos el cupón
-            $coupon->fill($input)->save();           
+            //rellenamos el cupón con los nuevos datos
+            $coupon->fill($input)->save();     
+            //y sincronizamos los cursos seleccionados para ese cupón      
             $coupon->courses()->sync(request('courses'));         
             DB::commit();
 

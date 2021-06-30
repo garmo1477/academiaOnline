@@ -7,6 +7,8 @@
         <meta name="keywords" content="webuni, education, creative, html">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+        <meta name="csrf-token" content="{{ csrf_token() }}"/>
+
         <!-- Favicon -->
         <link href="/img/favicon.ico" rel="shortcut icon"/>
 
@@ -41,7 +43,11 @@
     
     @component('components.alert-component')@endcomponent
 
-    @yield('content')
+    {{-- para cargar vue.js tenemos q poner un div con id app --}}    
+    <div id="app">
+        @yield('content')
+    </div>
+    
 
     @include('partials.learning.footer')   
 
@@ -52,7 +58,41 @@
     <script src="/js/circle-progress.min.js"></script>
     <script src="/js/owl.carousel.min.js"></script>
     <script src="/js/main.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js"></script>
 
+
+    <script>
+        $(document).ready(function(){
+            
+            $.ajaxSetup({
+                //función de ajax, en cada petición envía en la cabecera el csrf-token con su contenido (content="{{ csrf_token() }}")
+                headers:{
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            //capturamos el evento click del elemento con la clase del corazón de lista de deseos y usamos unbind para q no se ejecute repetidas veces
+            $('.toggle-wish').unbind().on('click', function(e){
+                const self = $(this);
+                const route = $(this).data('route');
+                $.ajax({
+                    method: 'PUT',
+                    url: route,
+                    beforeSend: function(){
+                        $.blockUI({
+                            message: '{{ __('Añadiendo a la lista de deseos') }}'
+                        });
+                    },
+                    //cambiara la clase del elemento dependiendo de si ya estaba clicado o no
+                    success: function(){
+                        self.toggleClass('text-danger');
+                    },
+                    complete: function(){
+                        $.unblockUI();
+                    }
+                });
+            });
+        });
+    </script>
     @stack('js')
     </body>
 </html>

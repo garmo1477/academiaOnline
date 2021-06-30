@@ -34,6 +34,19 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course whereUserId($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Category[] $categories
+ * @property-read int|null $categories_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Review[] $reviews
+ * @property-read int|null $reviews_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $students
+ * @property-read int|null $students_count
+ * @property-read \App\Models\User $teacher
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course filtered(Category $category)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course forTeacher()
+ * @property-read mixed $formatted_price
+ * @property-read mixed $rating
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Unit[] $units
+ * @property-read int|null $units_count
  */
 class Course extends Model
 {
@@ -61,7 +74,7 @@ class Course extends Model
     ];
 
     protected $appends = [
-        //cuando accedamos a los datos de un curso vamos a obtener toda la información. Añadimos aqui el método getFormattedPriceAttribute, poniendo en minuscula y solo las palabras del medio y con un guión separandolas
+        //cuando accedamos a los datos de un curso vamos a obtener toda la información. Añadimos aqui el método getFormattedPriceAttribute, poniendo en minuscula y solo las palabras del medio y con un guión separándolas
         "rating", 'formatted_price'
     ];
 
@@ -109,6 +122,18 @@ class Course extends Model
         return $this->hasMany(Unit::class)->orderBy('order', 'asc');
     }
 
+    public function wishlists()
+    {
+        //un curso puede estar en varias listas de deseos
+        return $this->hasMany(Wishlist::class);
+    }
+    public function wishedForUser()
+    {
+        return $this->wishlists            
+            ->where('course_id', $this->id)
+            ->count();
+    }
+
     public function getRatingAttribute()
     {
         //avg = average, saca una media de todas las valoraciones de un curso. Coge los datos de la columna stars de la tabla reviews
@@ -137,10 +162,10 @@ class Course extends Model
         return gmdate('H:i', $minutes * 60);
     }
 
-    public function scopeFiltered(Builder $builder)
+    public function scopeFiltered(Builder $builder, Category $category = null)
     {
         //cargamos los datos del profesor de un curso en concreto
-        $builder->with('teacher');
+        $builder->with('teacher', 'categories', 'wishlists');
         $builder->withCount('students'); //contador de estudiantes
         //donde el estado del curso es aprobado
         $builder->where('status', Course::PUBLISHED);
@@ -148,13 +173,19 @@ class Course extends Model
         if (session()->has('search[courses]')){
             $builder->where('title', 'LIKE', '%' . session('search[courses]') . '%');
         }
-        return $builder->paginate();
 
+        if ($category) {
+            $builder->whereHas('categories', function(Builder $table) use ($category){
+                $table->where('id', $category->id);
+            });
+        }
+        return $builder->paginate();
     }
 
     public function scopeForTeacher(Builder $builder)
     {
         return $builder
+            // devuelve los estudiantes de un curso del profesor q está conectado
             ->with('students')
             ->where('user_id', auth()->id())
             ->paginate();

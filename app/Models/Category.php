@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Hashidable;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -28,12 +29,13 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Category extends Model
 {
+   
     protected $fillable = ['name', 'description', 'picture'];
 
     public function courses()
     {
         //los cursos que tiene una categoría
-        return $this->belongsToMany(Course::class);
+        return $this->belongsToMany(Course::class)->where('status', Course::PUBLISHED);
     }
 
     public function imagePath()

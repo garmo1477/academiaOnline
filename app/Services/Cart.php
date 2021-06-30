@@ -14,7 +14,7 @@ class Cart{
      * Class Cart
      * @var Collection
      */
-    protected Collection $cart;
+    protected $cart;
 
     /**
      * Cart constructor

@@ -17,7 +17,7 @@
                     @include('partials.learning.modals.login')
                 @else
                     <a href="{{ route('logout') }}"
-                    {{-- evento para que no se ejecuto el evento tipico de los enlaces sino q haga lo q viene después --}}
+                    {{-- evento para que no se ejecute el evento tipico de los enlaces sino q haga lo q viene después --}}
                         onclick="event.preventDefault();
                         document.getElementById('logout-form').submit();"
                         class="site-btn header-btn"
@@ -39,6 +39,12 @@
                                 <a class="brand-text" href="{{ route('teacher.index') }}">{{ __('Profesor') }}</a>
                             </li>
                         @endteacher
+                        @auth
+                            <li>
+                                <a class="brand-text" href="{{ route('student.index') }}">{{ __('Estudiante') }}</a>
+                            </li>
+                        @endauth
+                        
                     </ul>
                 </nav>
             </div>
