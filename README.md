@@ -1,2 +1,2 @@
 # academiaOnline
-Proyecto aún en desarrollo, estoy creando este proyecto siguiendo un curso de Laravel 7 de Udemy.
+Proyecto hecho durante el curso de Laravel 7 en Udemy.
